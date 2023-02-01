@@ -1,18 +1,21 @@
 import styles from "./App.module.css";
 
+import Button from "./components/Button";
+import Header from "./Header";
+
 function App() {
   return (
     <>
       <div className={styles.nav}>Nav</div>
-      <div className={styles.header}>Header</div>
-      <div className={styles.listContainer}>ListContainer</div>
+      <Header />
+      <div className={styles.listContainer}>
+        <Button style={{ fontSize: "14px", backgroundColor: "GreenYellow" }}>
+          New Issue
+        </Button>
+      </div>
       <div className={styles.footer}>footer</div>
     </>
   );
-}
-
-function Button() {
-  return <button className={styles.button}>New Issue</button>;
 }
 
 export default App;
