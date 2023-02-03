@@ -7,13 +7,14 @@
 .topSection {
   display: flex;
   flex-direction: space-between;
+  margin-bottom: 20px;
 }
 
 .listFilter {
   margin-top: 20px;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  background: rgb(246, 248, 250);
+  background-color: yellow;
   padding: 16px;
 }
 
@@ -31,9 +32,19 @@
 .filterLists {
   display: flex;
   align-items: center;
+  font-size: 14px;
 }
 
 .filterLists > span {
   padding: 0 16px;
   line-height: 21px;
+}
+
+.textFilter {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.selected {
+  font-weight: 800;
 }
