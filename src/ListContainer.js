@@ -3,6 +3,7 @@ import styles from "./ListContainer.module.css";
 import Button from "./components/Button";
 import ListItem from "./components/ListItem";
 import ListItemLayout from "./components/ListItemLayout";
+import Modal from "./components/Modal";
 
 import { useState } from "react";
 
@@ -54,14 +55,17 @@ export default function ListContainer() {
 
 function ListFilter() {
   return (
-    <div className={styles.filterLists}>
-      <ListFilterItem>Author</ListFilterItem>
-      <ListFilterItem>Label</ListFilterItem>
-      <ListFilterItem>Projects</ListFilterItem>
-      <ListFilterItem>Milestones</ListFilterItem>
-      <ListFilterItem>Assignee</ListFilterItem>
-      <ListFilterItem>sort</ListFilterItem>
-    </div>
+    <>
+      <div className={styles.filterLists}>
+        <ListFilterItem>Author</ListFilterItem>
+        <ListFilterItem>Label</ListFilterItem>
+        <ListFilterItem>Projects</ListFilterItem>
+        <ListFilterItem>Milestones</ListFilterItem>
+        <ListFilterItem>Assignee</ListFilterItem>
+        <ListFilterItem>sort</ListFilterItem>
+      </div>
+      <Modal />
+    </>
   );
 }
 
