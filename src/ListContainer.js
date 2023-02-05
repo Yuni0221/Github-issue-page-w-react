@@ -9,9 +9,7 @@ import { useState } from "react";
 
 export default function ListContainer() {
   const [inputValue, setInputValue] = useState("is:pr is:open");
-
-  const openModeDataSize = 1;
-  const closeModeDataSize = 2;
+  const [list, setList] = useState([]);
 
   return (
     <div className={styles.listContainer}>
@@ -33,27 +31,30 @@ export default function ListContainer() {
       </div>
       <OpenClosedFilters />
       <ListItemLayout className={styles.listFilter}>
-        <ListFilter />
+        <ListFilter onChangeFilter={(filteredData) => {}} />
       </ListItemLayout>
       <div className={styles.container}>
-        <ListItem
-          badges={[
-            {
-              color: "red",
-              title: "Bug2",
-            },
-            {
-              color: "blue",
-              title: "Bug1",
-            },
-          ]}
-        />
+        {list.map((listItem) => (index) => (
+          <ListItem
+            key={index}
+            badges={[
+              {
+                color: "red",
+                title: "Bug2",
+              },
+              {
+                color: "blue",
+                title: "Bug1",
+              },
+            ]}
+          />
+        ))}
       </div>
     </div>
   );
 }
 
-function ListFilter() {
+function ListFilter({ onChangeFilter }) {
   return (
     <>
       <div className={styles.filterLists}>
@@ -64,16 +65,30 @@ function ListFilter() {
         <ListFilterItem>Assignee</ListFilterItem>
         <ListFilterItem>sort</ListFilterItem>
       </div>
-      <Modal />
     </>
   );
 }
 
-function ListFilterItem({ onClick, children }) {
+function ListFilterItem({ onClick, children, onChangeFilter }) {
+  const [showModal, setShowModal] = useState(false);
+
   return (
-    <span role="button" onClick={onClick}>
-      {children} ☺︎
-    </span>
+    <div className={styles.filterItem}>
+      <span role="button" onClick={() => setShowModal(true)}>
+        {children} ☺︎
+      </span>
+      <div className={styles.modalContainer}>
+        <Modal
+          opened={showModal}
+          onClose={() => setShowModal(false)}
+          placeholder="Filter labels"
+          serchDataList={["bug", "apple", "pines"]}
+          onClickCell={() => {
+            onChangeFilter();
+          }}
+        />
+      </div>
+    </div>
   );
 }
 

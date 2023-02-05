@@ -6,4 +6,40 @@
   background: #ffffff;
   position: absolute;
   z-index: 99;
+  display: none;
+}
+
+.header {
+  padding: 7px 7px 7px 16px;
+  border-bottom: 1px solid #d0d7de;
+  display: flex;
+  align-items: center;
+}
+
+.header > span {
+  flex: 1;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.header > button {
+  border: none;
+  background: transparent;
+}
+
+.opened {
+  display: block;
+}
+
+.input {
+  padding: 8px;
+}
+
+.input > input {
+  box-shadow: none;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  width: 100%;
+  padding: 5px 12px;
+  line-height: 20px;
 }
