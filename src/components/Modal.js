@@ -14,13 +14,17 @@ export default function Modal({
   const [filteredData, setFilteredData] = useState(serchDataList);
 
   useEffect(() => {
-    setFilteredData(serchDataList.filter((item) => item === serchValue));
-  }, [serchDataList, serchValue]);
+    setFilteredData(serchDataList);
+  }, [serchDataList]);
+
+  // useEffect(() => {
+  //   setFilteredData(serchDataList.filter((item) => item === serchValue));
+  // }, [serchDataList, serchValue]);
 
   return (
     <div className={cx(styles.modal, { [styles.opened]: opened })}>
       <div className={styles.header}>
-        <span>{title}</span>
+        <span>Filter by {title}</span>
         <button onClick={onClose}>X</button>
       </div>
       <div className={styles.input}>
@@ -30,9 +34,13 @@ export default function Modal({
           onChange={(e) => setSerchValue(e.target.value)}
         />
       </div>
-      {serchDataList.map((data) => (
-        <div key={data} onClick={onClickCell} role="button">
-          {data}
+      {filteredData.map((data) => (
+        <div
+          onClick={() => onClickCell(data)}
+          key={data.name}
+          className={styles.item}
+        >
+          {data.name}
         </div>
       ))}
     </div>

@@ -7,10 +7,9 @@ import ListItem from "./components/ListItem";
 import ListItemLayout from "./components/ListItemLayout";
 import Modal from "./components/Modal";
 import Pagination from "./components/Pagination";
+import { GITHUB_API } from "./api";
 
 import { useState, useEffect } from "react";
-
-const GITHUB_API = "https://api.github.com";
 
 export default function ListContainer() {
   const [inputValue, setInputValue] = useState("is:pr is:open");
@@ -84,37 +83,90 @@ export default function ListContainer() {
 }
 
 function ListFilter({ onChangeFilter }) {
+  const [showModal, setShowModal] = useState();
+  const [list, setList] = useState([]);
+  const filterList = ["Label", "Milestone", "Assignee"];
+
+  async function getData(apiPath) {
+    const data = await axios.get(
+      `${GITHUB_API}/repos/facebook/react/${apiPath}`
+    );
+
+    let result = [];
+    switch (apiPath) {
+      case "assignees":
+        result = data.data.map((d) => ({
+          name: d.login,
+        }));
+        break;
+      case "milestones":
+        result = data.data.map((d) => ({
+          name: d.title,
+        }));
+        break;
+      case "labels":
+      default:
+        result = data.data;
+    }
+
+    console.log({ result });
+    setList(result);
+  }
+
+  useEffect(() => {
+    if (showModal) {
+      const apiPath = `${showModal.toLowerCase()}s`;
+      getData(apiPath);
+    }
+  }, [showModal]);
+
   return (
     <>
       <div className={styles.filterLists}>
-        <ListFilterItem>Author</ListFilterItem>
-        <ListFilterItem>Label</ListFilterItem>
-        <ListFilterItem>Projects</ListFilterItem>
-        <ListFilterItem>Milestones</ListFilterItem>
-        <ListFilterItem>Assignee</ListFilterItem>
-        <ListFilterItem>sort</ListFilterItem>
+        {filterList.map((filter) => (
+          <ListFilterItem
+            serchDataList={list}
+            key={filter}
+            onClick={() => setShowModal(filter)}
+            onClose={() => setShowModal()}
+            showModal={showModal === filter}
+          >
+            {filter}
+          </ListFilterItem>
+        ))}
       </div>
     </>
   );
 }
 
-function ListFilterItem({ onClick, children, onChangeFilter }) {
-  const [showModal, setShowModal] = useState(false);
+function ListFilterItem({
+  children,
+  placeholder,
+  serchDataList,
+  showModal,
+  onClick,
+  onClose,
+  onChangeFilter,
+}) {
+  const [list, setList] = useState(serchDataList);
+
+  useEffect(() => {
+    setList(serchDataList);
+  }, [serchDataList]);
 
   return (
     <div className={styles.filterItem}>
-      <span role="button" onClick={() => setShowModal(true)}>
+      <span role="button" onClick={onClick}>
         {children} ☺︎
       </span>
       <div className={styles.modalContainer}>
         <Modal
+          title={children}
           opened={showModal}
-          onClose={() => setShowModal(false)}
-          placeholder="Filter labels"
-          serchDataList={["bug", "apple", "pines"]}
-          onClickCell={() => {
-            onChangeFilter();
-          }}
+          onClose={onClose}
+          placeholder={placeholder}
+          serchDataList={list}
+          onClickCell={(cellInfo) => {}}
         />
       </div>
     </div>
