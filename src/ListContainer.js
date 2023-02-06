@@ -56,7 +56,7 @@ export default function ListContainer() {
           ))}
         </div>
       </div>
-      <div>
+      <div className={styles.paginationContainer}>
         <Pagination
           maxPage={10}
           currentPage={page}
