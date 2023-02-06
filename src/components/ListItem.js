@@ -4,18 +4,26 @@ import Badge from "./Badge";
 
 export default function ListItem({
   checked,
-  onChangeCheckBox,
+  onClickCheckBox,
   onClickTitle,
-  badges,
+  data,
 }) {
+  const badges = data.labels;
+  const state = data.state === "open" ? "opened" : "closed";
+  const date = data.state === "open" ? data.created_at : data.closed_at;
+
   return (
-    <ListItemLayout>
-      <div role="button" onClick={onClickTitle} className={styles.title}>
-        Issue Example
-        {badges &&
-          badges.map((badgeProps, idx) => <Badge key={idx} {...badgeProps} />)}
+    <ListItemLayout checked={checked} onClick={onClickCheckBox}>
+      <div>
+        <div role="button" onClick={onClickTitle} className={styles.title}>
+          {data.title}
+          {badges.length > 0 &&
+            badges.map((props, idx) => <Badge {...props} key={`${idx}`} />)}
+        </div>
+        <div className={styles.description}>
+          #{data.number} {state} by {data.user.login}
+        </div>
       </div>
-      <div className={styles.description}>#Description</div>
     </ListItemLayout>
   );
 }
