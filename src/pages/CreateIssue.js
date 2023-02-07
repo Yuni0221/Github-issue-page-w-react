@@ -1,44 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import cx from "clsx";
 
 import Button from "../components/Button";
 import styles from "./CreateIssue.module.css";
 import TextField from "../components/TextField";
+import { useForm } from "../hooks";
 
 export default function CreateIssue() {
   const inputRef = useRef();
   const textareaRef = useRef();
-  const [inputValues, setInputValues] = useState({ title: "", body: "" });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const validateResult = validate(inputValues);
-    setErrors(validateResult);
-
-    const refs = { title: inputRef, body: textareaRef };
-    const errorKeys = Object.keys(validateResult);
-
-    if (errorKeys.length !== 0) {
-      const key = errorKeys[0];
-      alert(validateResult[key]);
-      refs[key].current.focus();
-
-      setIsSubmitting(false);
-      return;
+  const { isSubmitting, inputValues, onChange, errors, handleSubmit } = useForm(
+    {
+      initialValues: { title: "", body: "" },
+      onSubmit: () => console.log("완료"),
+      validate,
+      refs: { title: inputRef, body: textareaRef },
     }
-
-    if (errorKeys.length === 0) {
-      console.log("Submit 성공");
-    }
-  }
-
-  function onChange(e) {
-    const { name, value } = e.target;
-    setInputValues({ ...inputValues, [name]: value });
-  }
+  );
 
   return (
     <div className={styles.container}>
