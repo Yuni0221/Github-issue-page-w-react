@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Nav from "./components/Nav";
 import Header from "./Header";
@@ -13,7 +13,7 @@ import Actions from "./pages/Actions";
 
 function App() {
   return (
-    <Router>
+    <>
       <Nav />
       <Header />
       <Routes>
@@ -26,7 +26,7 @@ function App() {
         <Route path="/security" element={<Security />} />
         <Route path="/actions" element={<Actions />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 

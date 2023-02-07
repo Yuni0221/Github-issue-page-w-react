@@ -10,7 +10,7 @@ export default function ListItem({
 }) {
   const badges = data.labels;
   const state = data.state === "open" ? "opened" : "closed";
-  const date = data.state === "open" ? data.created_at : data.closed_at;
+  // const date = data.state === "open" ? data.created_at : data.closed_at;
 
   return (
     <ListItemLayout checked={checked} onClick={onClickCheckBox}>

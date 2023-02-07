@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import cx from "clsx";
 import axios from "axios";
 
@@ -20,7 +20,7 @@ export default function ListContainer() {
   const maxPage = 10;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = parseInt(searchParams.get("page"), 10);
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
   const state = searchParams.get("state");
 
   async function getData(params) {
@@ -43,15 +43,17 @@ export default function ListContainer() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
-          <Button
-            style={{
-              fontSize: "14px",
-              backgroundColor: "GreenYellow",
-              color: "black",
-            }}
-          >
-            New Issue
-          </Button>
+          <Link to="/new" className={styles.link}>
+            <Button
+              style={{
+                fontSize: "14px",
+                backgroundColor: "Aquamarine",
+                color: "black",
+              }}
+            >
+              New Issue
+            </Button>
+          </Link>
         </div>
         <OpenClosedFilters
           isOpenMode={state !== "closed"}

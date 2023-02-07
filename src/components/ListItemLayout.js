@@ -1,8 +1,9 @@
+import cx from "clsx";
 import styles from "./ListItemLayout.module.css";
 
-export default function ListItemLayout({ children }) {
+export default function ListItemLayout({ children, className }) {
   return (
-    <div className={styles.wrapper}>
+    <div className={cx(styles.wrapper, className)}>
       <input
         type="checkbox"
         className={styles.checkbox}
