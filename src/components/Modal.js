@@ -7,19 +7,26 @@ export default function Modal({
   title,
   onClose,
   placeholder,
-  serchDataList,
+  searchDataList,
   onClickCell,
 }) {
-  const [serchValue, setSerchValue] = useState("");
-  const [filteredData, setFilteredData] = useState(serchDataList);
+  const [searchValue, setsearchValue] = useState("");
+  const [filteredData, setFilteredData] = useState(searchDataList);
 
   useEffect(() => {
-    setFilteredData(serchDataList);
-  }, [serchDataList]);
+    setFilteredData(searchDataList);
+  }, [searchDataList]);
 
-  // useEffect(() => {
-  //   setFilteredData(serchDataList.filter((item) => item === serchValue));
-  // }, [serchDataList, serchValue]);
+  useEffect(() => {
+    if (searchValue === "") {
+      setFilteredData(searchDataList);
+    } else {
+      const filteredSearchList = searchDataList.filter((item) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredData(filteredSearchList);
+    }
+  }, [searchDataList, searchValue]);
 
   return (
     <div className={cx(styles.modal, { [styles.opened]: opened })}>
@@ -30,19 +37,26 @@ export default function Modal({
       <div className={styles.input}>
         <input
           placeholder={placeholder}
-          value={serchValue}
-          onChange={(e) => setSerchValue(e.target.value)}
+          value={searchValue}
+          onChange={(e) => setsearchValue(e.target.value)}
         />
       </div>
-      {filteredData.map((data) => (
-        <div
-          onClick={() => onClickCell(data)}
-          key={data.name}
-          className={styles.item}
-        >
-          {data.name}
-        </div>
-      ))}
+      <div className={styles.list}>
+        {filteredData.map((data) => (
+          <div
+            onClick={() => {
+              const isLabel = title.toLowerCase() === "label";
+              const paramKey = isLabel ? "labels" : title.toLowerCase();
+
+              onClickCell({ [paramKey]: data.name });
+            }}
+            key={data.name}
+            className={styles.item}
+          >
+            {data.name}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

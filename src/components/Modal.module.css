@@ -39,7 +39,7 @@
   box-shadow: none;
   border: 1px solid #d0d7de;
   border-radius: 6px;
-  width: 100%;
+  width: 90%;
   padding: 5px 12px;
   line-height: 20px;
 }
@@ -55,4 +55,9 @@
 
 .item:last-child {
   border-bottom: none;
+}
+
+.list {
+  overflow: auto;
+  max-height: 400px;
 }

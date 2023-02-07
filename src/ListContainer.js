@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import cx from "clsx";
 import axios from "axios";
 
@@ -9,29 +11,28 @@ import Modal from "./components/Modal";
 import Pagination from "./components/Pagination";
 import { GITHUB_API } from "./api";
 
-import { useState, useEffect } from "react";
-
 export default function ListContainer() {
   const [inputValue, setInputValue] = useState("is:pr is:open");
   const [list, setList] = useState([]);
   const [checked, setChecked] = useState(false);
-  const [page, setPage] = useState(1);
-  const [isOpenMode, setIsOpenMode] = useState(true);
+
+  // const [params, setParams] = useState();
   const maxPage = 10;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page"), 10);
+  const state = searchParams.get("state");
 
   async function getData(params) {
     const data = await axios.get(`${GITHUB_API}/repos/facebook/react/issues`, {
       params,
     });
-
     setList(data.data);
   }
 
   useEffect(() => {
-    getData({ page, state: isOpenMode ? "open" : "closed" });
-  }, [page, isOpenMode]);
-
-  console.log({ list });
+    getData(searchParams);
+  }, [searchParams]);
 
   return (
     <>
@@ -53,12 +54,16 @@ export default function ListContainer() {
           </Button>
         </div>
         <OpenClosedFilters
-          isOpenMode={isOpenMode}
-          onClickMode={setIsOpenMode}
+          isOpenMode={state !== "closed"}
+          onClickMode={(mode) => setSearchParams({ mode })}
         />
         <div className={styles.container}>
           <ListItemLayout className={styles.listFilter}>
-            <ListFilter onChangeFilter={(filteredData) => {}} />
+            <ListFilter
+              onChangeFilter={(params) => {
+                setSearchParams(params);
+              }}
+            />
           </ListItemLayout>
 
           {list.map((item) => (
@@ -74,7 +79,9 @@ export default function ListContainer() {
       <div className={styles.paginationContainer}>
         <Pagination
           currentPage={page}
-          onClickPageButton={(pageNumber) => setPage(pageNumber)}
+          onClickPageButton={(pageNumber) =>
+            setSearchParams({ page: pageNumber })
+          }
           maxPage={maxPage}
         />
       </div>
@@ -125,11 +132,12 @@ function ListFilter({ onChangeFilter }) {
       <div className={styles.filterLists}>
         {filterList.map((filter) => (
           <ListFilterItem
-            serchDataList={list}
+            searchDataList={list}
             key={filter}
             onClick={() => setShowModal(filter)}
             onClose={() => setShowModal()}
             showModal={showModal === filter}
+            onChangeFilter={onChangeFilter}
           >
             {filter}
           </ListFilterItem>
@@ -142,17 +150,17 @@ function ListFilter({ onChangeFilter }) {
 function ListFilterItem({
   children,
   placeholder,
-  serchDataList,
+  searchDataList,
   showModal,
   onClick,
   onClose,
   onChangeFilter,
 }) {
-  const [list, setList] = useState(serchDataList);
+  const [list, setList] = useState(searchDataList);
 
   useEffect(() => {
-    setList(serchDataList);
-  }, [serchDataList]);
+    setList(searchDataList);
+  }, [searchDataList]);
 
   return (
     <div className={styles.filterItem}>
@@ -165,8 +173,10 @@ function ListFilterItem({
           opened={showModal}
           onClose={onClose}
           placeholder={placeholder}
-          serchDataList={list}
-          onClickCell={(cellInfo) => {}}
+          searchDataList={list}
+          onClickCell={(params) => {
+            onChangeFilter(params);
+          }}
         />
       </div>
     </div>
@@ -178,15 +188,15 @@ function OpenClosedFilters({ isOpenMode, onClickMode }) {
     <>
       <OpenClosedFilter
         // size={openModeDataSize}
-        state="Open"
+        state={"Open"}
         selected={isOpenMode}
-        onClick={() => onClickMode(true)}
+        onClick={() => onClickMode("open")}
       />
       <OpenClosedFilter
         // size={closeModeDataSize}
-        state="Closed"
+        state={"Closed"}
         selected={!isOpenMode}
-        onClick={() => onClickMode(false)}
+        onClick={() => onClickMode("closed")}
       />
     </>
   );
