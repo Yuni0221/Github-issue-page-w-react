@@ -13,7 +13,7 @@ export default function CreateIssue() {
   const { isSubmitting, inputValues, onChange, errors, handleSubmit } = useForm(
     {
       initialValues: { title: "", body: "" },
-      onSubmit: () => console.log("완료"),
+      onSubmit: async () => console.log("완료"),
       validate,
       refs: { title: inputRef, body: textareaRef },
     }
